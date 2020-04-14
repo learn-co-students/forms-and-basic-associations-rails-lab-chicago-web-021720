@@ -31,9 +31,15 @@ describe "the song form", :type => :feature do
   it 'creates a song with notes' do
     visit '/songs/new'
     fill_in :song_title, with: 'Little Earthquakes'
-    fill_in :song_notes_attributes_0_content, with: 'great piano'
-    fill_in :song_notes_attributes_1_content, with: 'inaccurate seismology'
+    
+    # Note: I changed these locators to match my code
+    page.all(:fillable_field, 'song[note_contents][]')[0].set('great piano')
+    page.all(:fillable_field, 'song[note_contents][]')[1].set('inaccurate seismology')
+    page.all(:fillable_field, 'song[note_contents][]')[2].set('custom')
+
+    # fill_in 'song[note_contents][]', with: 'great piano'
+    # fill_in 'song[note_contents][]', with: 'inaccurate seismology'
     find('input[name="commit"]').click
-    expect(Song.last.notes.map(&:content)).to eq ['great piano', 'inaccurate seismology']
+    expect(Song.last.notes.map(&:content)).to eq ['great piano', 'inaccurate seismology', 'custom']
   end
 end
